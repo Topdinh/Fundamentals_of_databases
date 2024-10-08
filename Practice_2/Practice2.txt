@@ -1,0 +1,38 @@
+Select id, product_name from products where discontinued = 0;
+
+Select product_name, list_price from products Order By list_price ASC LIMIT 4;
+
+Select id, product_name, list_price From products where list_price Between 15 and 25;
+
+ALTER Table employees Add full_name Varchar(50) Generated Always AS (Concat(first_name,' ',last_name));
+Select id, full_name From employees;
+
+Select full_name From employees where full_name Like 'A%';
+
+Select Count(Distinct city) From employees;
+
+Select Distinct ship_name From orders;
+
+Select Max(list_price) From products;
+Select Min(list_price) From products;
+
+Select id, product_name from products where discontinued = 1;
+
+Select AVG(list_price) From products;
+Select STDDEV(list_price) From products;
+
+Select product_name,list_price From products where list_price > (Select AVG(list_price) From products);
+
+Insert Into Suppliers(company, last_name, first_name, city, country_region) Values
+(
+	'Habeco', 'Nguyễn', 'Hồng Linh', 'Hanoi', 'Vietnam'
+);
+
+Insert Into products(product_code, supplier_ids, list_price, discontinued,  category) Values
+(
+	'TBTruc Bach', 11, 22, 0, 'Beverages'
+);
+
+Update products Set standard_cost = 18 where product_code = 'TBTruc Bach';
+
+Delete From Suppliers where id = 11;
