@@ -1,0 +1,155 @@
+/*Ex1*/
+SELECT * FROM orders Where order_date > '2006-03-24';
+
+
+/*Ex2*/
+SELECT
+	p.product_code,
+	od.unit_price,
+	od.quantity,
+	od.unit_price * od.quantity * (1 - od.discount) AS Value
+FROM
+	products p 
+JOIN
+	order_details od ON p.id = od.product_id;
+	
+	
+/*Ex3*/
+SELECT
+	o.id,
+	o.order_date,
+	c.company,
+	od.unit_price * od.quantity * (1 - od.discount) AS Value
+FROM
+	orders o
+JOIN
+	order_details od ON o.id = od.product_id
+JOIN
+	customers c ON o.customer_id = c.id
+Where 
+	o.order_date > '2006-03-24';
+	
+	
+/*Ex4*/   
+SELECT
+	o.id,
+	o.order_date,
+	c.company,
+	od.unit_price * od.quantity AS subtotal
+FROM
+	orders o
+JOIN
+	order_details od ON o.id = od.product_id
+JOIN
+	customers c ON o.customer_id = c.id
+Where 
+	o.order_date > '2006-03-24'
+ORDER BY
+	o.id ASC;
+	
+
+/*Ex5*/
+SELECT
+	o.id,
+	o.order_date,
+	c.company,
+	od.unit_price * od.quantity AS subtotal
+FROM
+	orders o
+JOIN
+	order_details od ON o.id = od.product_id
+JOIN
+	customers c ON o.customer_id = c.id
+Where
+	o.order_date > '2006-03-24' AND od.unit_price * od.quantity >= 800;
+
+
+/*Ex6*/	
+SELECT
+	CONCAT(e.last_name,' ',e.first_name) AS full_name,
+	SUM(od.unit_price * od.quantity) AS sale_in_dolars
+FROM 
+	orders o
+JOIN
+	order_details od ON o.id = od.product_id
+JOIN
+	employees e ON o.employee_id = e.id
+GROUP BY
+	o.employee_id
+HAVING
+	SUM(od.unit_price * od.quantity) > 1000
+ORDER BY
+	sale_in_dolars DESC;
+	
+	
+/*Ex7*/
+SELECT DISTINCT *
+FROM 
+	products
+ORDER BY product_name ASC;	
+
+/*Ex8*/
+SELECT
+	MIN(standard_cost),
+	MAX(standard_cost),
+	AVG(standard_cost),
+	STDDEV(standard_cost)
+FROM
+	products;
+	
+/*Ex9*/
+SELECT
+	AVG(list_price)
+FROM products;
+
+
+/*Ex10*/
+SELECT
+	ship_city,
+	MAX(shipping_fee),
+	AVG(shipping_fee)
+FROM
+	orders
+GROUP BY ship_city
+ORDER BY 
+    ship_city ASC;
+	
+	
+/*Ex11*/
+DELIMITER $$
+CREATE PROCEDURE IF NOT EXISTS highest_AVG (IN num_categories INT)
+BEGIN
+    SELECT
+        id,
+        product_name,
+        standard_cost,
+        AVG(list_price) AS Average_price
+    FROM
+        products
+    GROUP BY id
+    ORDER BY AVG(list_price) DESC
+    LIMIT num_categories;
+END $$
+DELIMITER ;
+
+
+/*Ex12*/
+DELIMITER $$
+CREATE PROCEDURE IF NOT EXISTS lowest_AVG (IN num_categories INT)
+BEGIN
+    SELECT
+        id,
+        product_name,
+        standard_cost,
+        AVG(list_price) AS Average_price
+    FROM
+        products
+    GROUP BY id
+    ORDER BY AVG(list_price) ASC
+    LIMIT num_categories;
+END $$
+DELIMITER ;
+
+CALL lowest_AVG(1);
+
+	
