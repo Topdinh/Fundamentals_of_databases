@@ -1,0 +1,64 @@
+Create DATABASE IF NOT EXISTS Company;
+
+Use Company;
+
+Create Table IF NOT EXISTS EMPLOYEE
+(
+	Fname Varchar(50),
+	Minit Char(1),
+	Lname Varchar(50),
+	Ssn Char(9) PRIMARY KEY,
+	Bdate DATE,
+	Address Varchar(100),
+	Sex Char(1),
+	Salary DECIMAL(10,2),
+	Super_ssn Char(9),
+	Dno INT,
+	Married INT DEFAULT(1)
+);
+Create Table IF NOT EXISTS DEPARTMENT
+(
+	Dname Varchar(50),
+	Dnumber INT PRIMARY KEY,
+	Mgr_ssn Char(9),
+	FOREIGN KEY (Mgr_ssn) REFERENCES EMPLOYEE(Ssn),
+	Mgr_start_date DATE
+);
+Create Table IF NOT EXISTS DEPT_LOCATIONS
+(
+	Dnumber INT,
+	FOREIGN KEY (Dnumber) REFERENCES DEPARTMENT(Dnumber),
+	Dlocation Varchar(50)
+);
+Create Table IF NOT EXISTS PROJECT
+(
+	Pname Varchar(50),
+	Pnumber INT PRIMARY KEY,
+	Plocation Varchar(50),
+	Dnum INT,
+	FOREIGN KEY (Dnum) REFERENCES DEPARTMENT(Dnumber)
+);
+Create Table IF NOT EXISTS WORKS_ON
+(
+	Essn Char(9),
+	FOREIGN KEY (Essn) REFERENCES EMPLOYEE(Ssn),
+	Pno INT,
+	FOREIGN KEY (Pno) REFERENCES PROJECT(Pnumber),
+	Hours DECIMAL(3,1)
+);
+Create Table IF NOT EXISTS DEPENDENT
+(
+	Essn Char(9),
+	FOREIGN KEY (Essn) REFERENCES EMPLOYEE(Ssn),
+	Depentdent_name Varchar(50),
+	Sex Char(1),
+	Bdate DATE,
+	Relationship Varchar(25)
+);
+
+UPDATE EMPLOYEE SET Super_ssn = Ssn;
+
+ALTER TABLE EMPLOYEE ADD Partner_ssn CHAR(9) NULL;
+UPDATE EMPLOYEE SET Partner_ssn = NULL WHERE Married = 0;
+
+DROP DATABASE company;
